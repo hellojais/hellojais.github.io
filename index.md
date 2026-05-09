@@ -3,8 +3,8 @@ layout: home
 title: Santosh Jaiswal
 ---
 
-## Welcome
+Machine learning researcher focused on world models, representation learning,
+and efficient training on consumer hardware.
 
-I'm Santosh Jaiswal, a machine learning researcher and practitioner.
+I document experiments, findings, and ideas here.
 
-This site documents my research projects, experiments, and findings.
