@@ -16,6 +16,7 @@ highlighter: rouge
 
 kramdown:
   math_engine: mathjax
+  math_engine_opts: {}
 
 defaults:
   - scope:
