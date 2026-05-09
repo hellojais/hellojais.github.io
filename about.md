@@ -4,7 +4,9 @@ title: About
 permalink: /about/
 ---
 
-![Santosh Jaiswal](/assets/images/santosh.png){: style="width:200px; border-radius:8px; float:right; margin:0 0 1em 1.5em;"}
+<div style="text-align:center; margin-bottom:1.5em;">
+  <img src="/assets/images/santosh.png" alt="Santosh Jaiswal" style="width:160px; border-radius:12px;">
+</div>
 
 ## Santosh Jaiswal
 
