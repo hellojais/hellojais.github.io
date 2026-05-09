@@ -14,4 +14,4 @@ representation learning, and efficient training on Apple Silicon.
 - HuggingFace: [hellojais](https://huggingface.co/hellojais)
 
 ### Research
-- [LeWM Billiards — What JEPA Learns and Where It Struggles](/2026/05/09/what-billiards-reveals-about-jepa.html)
+- [LeWM Billiards — What JEPA Learns and Where It Struggles](/machine-learning/world-models/research/2026/05/09/what-billiards-reveals-about-jepa.html)
