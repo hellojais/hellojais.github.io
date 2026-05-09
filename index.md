@@ -1,6 +1,5 @@
 ---
 layout: home
-title: Santosh Jaiswal
 ---
 
 Machine learning researcher focused on world models, representation learning,
