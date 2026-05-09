@@ -270,9 +270,7 @@ Implement temporal hierarchies that decouple high-level strategic reasoning (poc
 **5. Inverse dynamics modeling**
 Learn action representations through inverse dynamics: inferring what action caused a transition rather than predicting forward from actions. This directly addresses the velocity encoding gap: instead of the encoder inferring velocity implicitly from pixel differences, the inverse dynamics model is explicitly trained to recover the action (impulse direction and magnitude) that produced a given state transition. For billiards, where the cue ball impulse determines everything about the subsequent collision, this gives the model a direct supervision signal for the physical quantity that matters most.
 
-Options 1 and 2 are implementable within the existing LeWM codebase with modest changes: frame stacking is a data preprocessing step, and an auxiliary velocity head is a small addition to the training objective. Options 3, 4, and 5 require more significant architectural or training changes. If you wanted one experiment this weekend, start with frame stacking.
-
-Which of these would you try first?
+Options 1 and 2 are implementable within the existing LeWM codebase with modest changes: frame stacking is a data preprocessing step, and an auxiliary velocity head is a small addition to the training objective. Options 3, 4, and 5 require more significant architectural or training changes.
 
 ---
 
