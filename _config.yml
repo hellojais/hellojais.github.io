@@ -1,0 +1,26 @@
+title: Santosh Jaiswal
+description: Research blog on machine learning and world models
+author: Santosh Jaiswal
+email: hellojais@gmail.com
+github_username: hellojais
+url: "https://hellojais.github.io"
+
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  math_engine: mathjax
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Santosh Jaiswal"
