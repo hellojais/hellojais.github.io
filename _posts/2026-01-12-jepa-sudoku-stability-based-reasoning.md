@@ -7,8 +7,8 @@ author: Santosh Jaiswal
 description: Most reasoning systems traverse invalid states and repair them. I built a JEPA-style Sudoku solver that never enters an invalid state at all. Reasoning emerges from maintaining latent stability rather than fixing errors.
 ---
 
-> **Author:** Santosh Jaiswal ([@hellojais](https://github.com/hellojais))
-> **Paper:** [Stability-Based Reasoning with Joint Embedding Predictive Architectures: A Case Study on Sudoku](#) *(submitted, awaiting endorsement)*
+> **Author:** Santosh Jaiswal ([@hellojais](https://github.com/hellojais)) \
+> **Paper:** [Stability-Based Reasoning with Joint Embedding Predictive Architectures: A Case Study on Sudoku](#) *(submitted, awaiting endorsement)* \
 > **Related work:** [TRM (Creswell & Shanahan, 2024)](https://arxiv.org/abs/2402.03654)
 
 ---
