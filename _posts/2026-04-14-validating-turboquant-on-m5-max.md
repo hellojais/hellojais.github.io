@@ -7,8 +7,8 @@ author: Santosh Jaiswal
 description: I tested TurboQuant (ICLR 2026) on a MacBook Pro M5 Max with 128GB unified memory. KV cache RAM dropped from 4.2 GB to 0.85 GB on a 32k-context Qwen-7B run, with 100% retrieval accuracy on a Needle-in-a-Haystack test. Here's what I learned.
 ---
 
-> **Author:** Santosh Jaiswal ([@hellojais](https://github.com/hellojais))
-> **Paper:** [TurboQuant (ICLR 2026)](https://lnkd.in/gukvqcQs)
+> **Author:** Santosh Jaiswal ([@hellojais](https://github.com/hellojais)) \
+> **Paper:** [TurboQuant (ICLR 2026)](https://lnkd.in/gukvqcQs) \
 > **Library:** [mlx-optiq / mlx-vlm](https://lnkd.in/gXkdWeYp) by [Prince Canuma](https://github.com/PrinceCuber) and contributors
 
 ---
