@@ -4,9 +4,9 @@ layout: default
 
 <style>
 .about-wrap {
-  padding: 2rem 0;
+  padding: 2rem 0 1rem;
 }
-.about-name {
+.about-role {
   font-size: 1rem;
   font-weight: 600;
   color: #111;
@@ -21,7 +21,7 @@ layout: default
 .about-divider {
   border: none;
   border-top: 1px solid #e8e8e8;
-  margin: 1.75rem 0;
+  margin: 1.5rem 0;
 }
 .about-section-label {
   font-size: 0.68rem;
@@ -44,40 +44,16 @@ layout: default
   color: #3c3489;
   text-decoration: none;
 }
-.about-links li a:hover {
-  text-decoration: underline;
-}
+.about-links li a:hover { text-decoration: underline; }
 .about-links li span {
   font-size: 0.85rem;
   color: #aaa;
   margin-right: 0.3rem;
 }
-.about-research {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.about-research li a {
-  font-size: 0.88rem;
-  color: #111;
-  text-decoration: none;
-  font-weight: 500;
-  border-bottom: 1px solid #e8e8e8;
-  display: block;
-  padding-bottom: 0.5rem;
-}
-.about-research li a:hover {
-  color: #3c3489;
-  border-color: #a0a0e8;
-  text-decoration: none;
-}
 </style>
 
 <div class="about-wrap">
-  <p class="about-name">Santosh Jaiswal</p>
+  <p class="about-role">ML researcher &amp; writer</p>
   <p class="about-bio">Machine learning researcher focused on world models, representation learning, and efficient training on consumer hardware.</p>
   <p class="about-bio">I work at the intersection of research and engineering: building environments, training models, and running controlled experiments to understand what works and why.</p>
 
@@ -87,12 +63,5 @@ layout: default
   <ul class="about-links">
     <li><span>GitHub</span><a href="https://github.com/hellojais">hellojais</a></li>
     <li><span>HuggingFace</span><a href="https://huggingface.co/hellojais">hellojais</a></li>
-  </ul>
-
-  <hr class="about-divider">
-
-  <p class="about-section-label">Research</p>
-  <ul class="about-research">
-    <li><a href="/machine-learning/world-models/research/2026/05/09/what-billiards-reveals-about-jepa.html">What Billiards Reveals About JEPA: Strong Physics Representations, a Precise Planning Boundary</a></li>
   </ul>
 </div>
