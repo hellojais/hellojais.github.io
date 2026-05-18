@@ -2,33 +2,128 @@
 layout: default
 ---
 
+<style>
+.home-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 2rem 0 1.75rem;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 1.75rem;
+}
+.hero-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e8e6fc;
+  color: #3c3489;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.hero-role {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 0.35rem;
+}
+.hero-bio {
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 0.65rem;
+}
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.hero-tag {
+  font-size: 0.72rem;
+  padding: 2px 9px;
+  border-radius: 20px;
+  background: #eeedfe;
+  color: #3c3489;
+}
+.home-links {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #555;
+  text-decoration: none;
+  padding: 4px 11px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+.home-link:hover { color: #111; border-color: #999; text-decoration: none; }
+.posts-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin: 0 0 0.65rem;
+}
+.post-list { list-style: none; margin: 0; padding: 0; }
+.post-card { margin-bottom: 0.6rem; }
+.post-card-link {
+  display: block;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.post-card-link:hover { border-color: #bbb; text-decoration: none; }
+.post-date { font-size: 0.72rem; color: #bbb; margin: 0 0 0.25rem; }
+.post-title { font-size: 0.92rem; font-weight: 600; color: #111; margin: 0 0 0.35rem; line-height: 1.4; }
+.post-excerpt {
+  font-size: 0.8rem; color: #777; margin: 0 0 0.4rem; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.post-read { font-size: 0.75rem; color: #bbb; }
+@media (max-width: 480px) {
+  .home-hero { flex-direction: column; gap: 0.75rem; }
+}
+</style>
+
 <div class="home-hero">
   <div class="hero-avatar">SJ</div>
   <div class="hero-text">
     <p class="hero-role">ML researcher &amp; writer</p>
     <p class="hero-bio">{{ content }}</p>
     <div class="hero-tags">
-      <span class="tag">World models</span>
-      <span class="tag">Representation learning</span>
-      <span class="tag">Consumer hardware</span>
+      <span class="hero-tag">World models</span>
+      <span class="hero-tag">Representation learning</span>
+      <span class="hero-tag">Consumer hardware</span>
     </div>
   </div>
 </div>
 
 <div class="home-links">
   <a class="home-link" href="https://github.com/{{ site.github_username }}">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
     {{ site.github_username }}
   </a>
   <a class="home-link" href="mailto:{{ site.email }}">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,12 2,6"></polyline></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,12 2,6"></polyline></svg>
     {{ site.email }}
   </a>
 </div>
 
 <div class="posts-section">
   <p class="posts-label">Latest posts</p>
-
   {% if site.posts.size > 0 %}
     <ul class="post-list">
       {% for post in site.posts %}
@@ -36,15 +131,11 @@ layout: default
         <a href="{{ post.url | relative_url }}" class="post-card-link">
           <p class="post-date">{{ post.date | date: "%B %d, %Y" }}</p>
           <p class="post-title">{{ post.title | escape }}</p>
-          {% if post.description %}
-          <p class="post-excerpt">{{ post.description }}</p>
-          {% endif %}
+          {% if post.description %}<p class="post-excerpt">{{ post.description }}</p>{% endif %}
           <span class="post-read">Read post &rarr;</span>
         </a>
       </li>
       {% endfor %}
     </ul>
-  {% else %}
-    <p>No posts yet.</p>
   {% endif %}
 </div>
