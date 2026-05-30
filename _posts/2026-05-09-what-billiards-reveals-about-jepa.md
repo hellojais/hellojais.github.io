@@ -20,7 +20,7 @@ math: true
 
 ## TL;DR
 
-I applied LeWM, a recently published JEPA-based world model, to 2D billiards, a domain nobody had tested it on. The model learned ball position excellently (R²=0.988) but velocity poorly (R²=0.33). Pure imagination-based planning failed because billiards is decided in a single collision frame that requires precise velocity simulation. A state-based hybrid approach succeeded on novel combinations never seen during training. These findings align with and concretely explain the Two-Room boundary condition described in the original LeWM paper: low visual complexity environments expose a specific limitation where JEPA's isotropic Gaussian prior produces a latent space that is stable but insufficiently structured for goal-directed planning. A follow-up investigation identified a second failure mode — representational eviction under frame stacking — and an architectural fix (auxiliary state supervision) that recovers position R²=0.999 and velocity R²=0.947. The Update section below covers these results.
+I applied LeWM, a recently published JEPA-based world model, to 2D billiards, a domain nobody had tested it on. The model learned ball position excellently (R²=0.988) but velocity poorly (R²=0.33). Pure imagination-based planning failed because billiards is decided in a single collision frame that requires precise velocity simulation. A state-based hybrid approach succeeded on novel combinations never seen during training. These findings align with and concretely explain the Two-Room boundary condition described in the original LeWM paper: low visual complexity environments expose a specific limitation where JEPA's isotropic Gaussian prior produces a latent space that is stable but insufficiently structured for goal-directed planning. A follow-up investigation identified a second failure mode (representational eviction under frame stacking) and an architectural fix (auxiliary state supervision) that recovers position R²=0.999 and velocity R²=0.947. The Update section below covers these results.
 
 ---
 
@@ -242,8 +242,8 @@ The complete picture:
 | What worked | What did not |
 |---|---|
 | Training stability (SIGReg) ✅ | Embedding-distance planning ⚠️ |
-| Position encoding (R²=0.988) ✅ | Velocity encoding — baseline (R²=0.33) ⚠️ |
-| Velocity encoding — AuxLoss fix (R²=0.947) ✅ | Predictor rollout accuracy at collision ⚠️ |
+| Position encoding (R²=0.988) ✅ | Velocity encoding, baseline (R²=0.33) ⚠️ |
+| Velocity encoding, AuxLoss fix (R²=0.947) ✅ | Predictor rollout accuracy at collision ⚠️ |
 | Generalizing to novel combinations ✅ | Collision mechanics simulation ⚠️ |
 | Physical continuity understanding (VoE) ✅ | Pure JEPA imagination planning ⚠️ |
 | State-based hybrid planning ✅ | Autoregressive error accumulation ⚠️ |
@@ -254,7 +254,7 @@ This is not a failure of JEPA. The encoder learned rich physics representations,
 
 ## What's Next
 
-Three remaining directions (frame stacking and auxiliary supervision have since been tested — see Update section above):
+Three remaining directions (frame stacking and auxiliary supervision have since been tested; see Update section above):
 
 **3. Contrastive objective for goal states**
 Explicitly train the model so that "ball near pocket" embeddings cluster together, distinct from "ball far from pocket." This addresses the uniform shell problem at its root, giving CEM a real gradient to follow rather than patching around it.
@@ -275,7 +275,7 @@ After publishing the original post, the velocity encoding gap pointed to two nat
 
 | Model | Key change | val/pred_loss | pos R² | vel R² |
 |---|---|---|---|---|
-| Transformer baseline | — | 0.0035 | ≈0.983\* | ≈0.178\* |
+| Transformer baseline | none | 0.0035 | ≈0.983\* | ≈0.178\* |
 | Mamba predictor | Stateful S6 predictor | 0.0034 | 0.983† | 0.297† |
 | Frame stacking | 9-channel input | 0.00594 | 0.446 | 0.138 |
 | AuxLoss full | + auxiliary state head | **0.00105** | **0.999** | **0.947** |
@@ -283,13 +283,13 @@ After publishing the original post, the velocity encoding gap pointed to two nat
 \*Estimated; 192-dim probe not run separately for this model.  
 †32-dim probe values; 192-dim probe not run for Mamba.
 
-**Mamba predictor: the bottleneck is the encoder, not the predictor.** The original post speculated that the Transformer predictor's fixed 3-frame context might be failing to accumulate velocity history. Replacing it with a Mamba (S6) predictor — which maintains persistent hidden state and can in principle integrate velocity over arbitrary histories — made no meaningful difference: velocity R² moved from 0.296 to 0.297, and prediction loss fell only 3.1%. Architecture is not the bottleneck. The problem sits upstream in what the encoder captures from a single frame.
+**Mamba predictor: the bottleneck is the encoder, not the predictor.** The original post speculated that the Transformer predictor's fixed 3-frame context might be failing to accumulate velocity history. Replacing it with a Mamba (S6) predictor (which maintains persistent hidden state and can in principle integrate velocity over arbitrary histories) made no meaningful difference: velocity R² moved from 0.296 to 0.297, and prediction loss fell only 3.1%. Architecture is not the bottleneck. The problem sits upstream in what the encoder captures from a single frame.
 
-**Frame stacking: explicit optical flow triggers representational eviction.** Stacking three consecutive frames as 9 input channels makes pixel-level motion literally visible to the encoder's first layer. Target ball velocity did improve — from R² ≈ 0.30 to R² ≈ 0.76 at the 32-dim level (extended probe). But at the 192-dim CLS level, position collapsed from R² = 0.983 to R² = 0.446 and overall velocity R² fell to 0.138, because the cue ball velocity signal was almost completely evicted (R² ≈ 0.06). The encoder made a rational optimisation choice: with optical flow available, velocity is more predictive of the next embedding than absolute position, so SIGReg's fixed-capacity isotropic regularisation caused the model to trade spatial completeness for motion encoding. We call this **representational eviction** — JEPA's single prediction objective cannot simultaneously optimise for next-state predictability (training signal) and goal-relevant spatial completeness (planning requirement). Both quantities are needed for planning; neither alone suffices.
+**Frame stacking: explicit optical flow triggers representational eviction.** Stacking three consecutive frames as 9 input channels makes pixel-level motion literally visible to the encoder's first layer. Target ball velocity did improve, from R² ≈ 0.30 to R² ≈ 0.76 at the 32-dim level (extended probe). But at the 192-dim CLS level, position collapsed from R² = 0.983 to R² = 0.446 and overall velocity R² fell to 0.138, because the cue ball velocity signal was almost completely evicted (R² ≈ 0.06). The encoder made a rational optimisation choice: with optical flow available, velocity is more predictive of the next embedding than absolute position, so SIGReg's fixed-capacity isotropic regularisation caused the model to trade spatial completeness for motion encoding. We call this **representational eviction**: JEPA's single prediction objective cannot simultaneously optimise for next-state predictability (training signal) and goal-relevant spatial completeness (planning requirement). Both quantities are needed for planning; neither alone suffices.
 
-**Auxiliary state supervision: full recovery and a 3.3× prediction gain.** The fix is a lightweight `AuxStateHead` (LayerNorm(192) → Linear(192→10)) attached to the ViT CLS token during training, predicting all 10 ground-truth state dimensions with a small auxiliary loss (λ_aux = 0.1). The head is discarded at inference — its only role is to provide a gradient signal strong enough to counteract the regularisation pressure that caused eviction. At 192-dim, position R² recovered to 0.999 and velocity R² to 0.947. The combined model's val/pred_loss of 0.00105 is **3.3× lower than the Transformer baseline**, demonstrating that richer representations actually aid prediction rather than conflicting with it. The mild tension with JEPA's self-supervised ethos is analogous to SIGReg itself, which also adds a supervised geometric constraint to the embedding space.
+**Auxiliary state supervision: full recovery and a 3.3× prediction gain.** The fix is a lightweight `AuxStateHead` (LayerNorm(192) → Linear(192→10)) attached to the ViT CLS token during training, predicting all 10 ground-truth state dimensions with a small auxiliary loss (λ_aux = 0.1). The head is discarded at inference; its only role is to provide a gradient signal strong enough to counteract the regularisation pressure that caused eviction. At 192-dim, position R² recovered to 0.999 and velocity R² to 0.947. The combined model's val/pred_loss of 0.00105 is **3.3× lower than the Transformer baseline**, demonstrating that richer representations actually aid prediction rather than conflicting with it. The mild tension with JEPA's self-supervised ethos is analogous to SIGReg itself, which also adds a supervised geometric constraint to the embedding space.
 
-The encoder bottleneck is resolved — but planning still fails. In subsequent experiments, CEM with the fixed encoder and a pocket-proximity cost achieved at best 28% progress (best seed: 147.5px vs. 213.9px start distance); a state-based planner using ground-truth physics succeeded 5/5 on novel cross-episode combinations. Fixing the encoder is necessary but not sufficient: predictor rollout accuracy at collision timesteps is the second, still-open bottleneck.
+The encoder bottleneck is resolved, but planning still fails. In subsequent experiments, CEM with the fixed encoder and a pocket-proximity cost achieved at best 28% progress (best seed: 147.5px vs. 213.9px start distance); a state-based planner using ground-truth physics succeeded 5/5 on novel cross-episode combinations. Fixing the encoder is necessary but not sufficient: predictor rollout accuracy at collision timesteps is the second, still-open bottleneck.
 
 For complete technical details, per-dimension R² breakdowns, and extended probe diagnostics, see [FINDINGS.md](https://github.com/hellojais/le-wm/blob/main/FINDINGS.md).
 
