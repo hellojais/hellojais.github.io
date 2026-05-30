@@ -242,27 +242,26 @@ The complete picture:
 | What worked | What did not |
 |---|---|
 | Training stability (SIGReg) ✅ | Embedding-distance planning ⚠️ |
-| Position encoding (R²=0.988) ✅ | Velocity encoding, baseline (R²=0.33) ⚠️ |
-| Velocity encoding, AuxLoss fix (R²=0.947) ✅ | Predictor rollout accuracy at collision ⚠️ |
+| Position encoding (R²=0.988) ✅ | Velocity encoding (R²=0.33) ⚠️ |
 | Generalizing to novel combinations ✅ | Collision mechanics simulation ⚠️ |
 | Physical continuity understanding (VoE) ✅ | Pure JEPA imagination planning ⚠️ |
 | State-based hybrid planning ✅ | Autoregressive error accumulation ⚠️ |
 
-This is not a failure of JEPA. The encoder learned rich physics representations, with position encoded at R²=0.988 after training purely from pixels and no explicit supervision. The limitation is specific and identifiable: in low visual complexity, high-precision physics environments, the embedding space needs additional structure for embedding-distance-based planning to work. The state-based hybrid approach succeeds, but the intellectually interesting challenge is making pure imagination-based planning work without the simulator.
+This is not a failure of JEPA. The encoder learned rich physics representations, with position encoded at R²=0.988 after training purely from pixels and no explicit supervision. The limitation is specific and identifiable: in low visual complexity, high-precision physics environments, the embedding space needs additional structure for embedding-distance-based planning to work. The state-based hybrid approach succeeds, but the intellectually interesting challenge is making pure imagination-based planning work without the simulator. Subsequent experiments on the velocity encoding gap and an architectural fix are covered in the Update section below.
 
 ---
 
 ## What's Next
 
-Three remaining directions (frame stacking and auxiliary supervision have since been tested; see Update section above):
+Three remaining directions (frame stacking and auxiliary supervision have since been tested; see Update section below):
 
-**3. Contrastive objective for goal states**
+**1. Contrastive objective for goal states**
 Explicitly train the model so that "ball near pocket" embeddings cluster together, distinct from "ball far from pocket." This addresses the uniform shell problem at its root, giving CEM a real gradient to follow rather than patching around it.
 
-**4. Hierarchical world modeling**
+**2. Hierarchical world modeling**
 Implement temporal hierarchies that decouple high-level strategic reasoning (pocket selection) from low-level motor control (precise cue strike). This would extend the effective planning horizon by separating what to do from how to do it precisely, particularly relevant for billiards where the strategic decision (which pocket) and the execution precision (exact impulse angle) operate on very different timescales.
 
-**5. Inverse dynamics modeling**
+**3. Inverse dynamics modeling**
 Learn action representations through inverse dynamics: inferring what action caused a transition rather than predicting forward from actions. This directly addresses the velocity encoding gap: instead of the encoder inferring velocity implicitly from pixel differences, the inverse dynamics model is explicitly trained to recover the action (impulse direction and magnitude) that produced a given state transition. For billiards, where the cue ball impulse determines everything about the subsequent collision, this gives the model a direct supervision signal for the physical quantity that matters most.
 
 ---
