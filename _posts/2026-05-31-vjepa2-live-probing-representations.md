@@ -17,7 +17,7 @@ description: "I ran V-JEPA 2 frozen on 1,059 UCF-101 videos it was never trained
 ## TL;DR
 
 V-JEPA 2's frozen backbone achieves 98.2% ± 1.0% linear probe accuracy
-on UCF-101 — a dataset it was never trained on. The SSv2 classification
+on UCF-101, a dataset it was never trained on. The SSv2 classification
 head, by contrast, produces low-confidence or semantically mismatched
 predictions for 42% of UCF-101 classes. All four "blind spot" classes
 that the SSv2 head fails on completely (PoleVault, SalsaSpin,
@@ -29,7 +29,7 @@ head's fixed 174-word SSv2 vocabulary is.
 
 ## Motivation
 
-V-JEPA 2 is pre-trained self-supervised — it learns by predicting
+V-JEPA 2 is pre-trained self-supervised: it learns by predicting
 missing spatio-temporal patches in embedding space, with no labels.
 A classification head is then fine-tuned on Something-Something v2
 (SSv2), a dataset of 174 hand-object interaction categories.
@@ -49,7 +49,7 @@ This study answers that question systematically on UCF-101.
 
 ## Setup
 
-**Model:** qubvel-hf/vjepa2-vitl-fpc16-256-ssv2 — ViT-L backbone,
+**Model:** qubvel-hf/vjepa2-vitl-fpc16-256-ssv2, ViT-L backbone,
 325M parameters, SSv2 classification head (174 classes). Used frozen
 throughout. No fine-tuning at any stage.
 
@@ -88,7 +88,7 @@ The SSv2 head's response to out-of-distribution video collapses
 to a small set of motion archetypes.
 
 The HIGH_CONF_CONSISTENT mappings are the most informative. The
-model is confident and consistent — but the SSv2 labels it assigns
+model is confident and consistent, but the SSv2 labels it assigns
 reveal what it actually encoded:
 
 | UCF Class | SSv2 Prediction | Confidence |
@@ -102,7 +102,7 @@ reveal what it actually encoded:
 WalkingWithDog → "Moving away from something with your camera" is
 a clean example of JEPA encoding working as intended. The model
 has no concept of "dog" as a subject. It encodes the camera-relative
-motion pattern — scene receding as you walk forward — and maps it
+motion pattern (scene receding as you walk forward) and maps it
 to the nearest SSv2 spatial-motion concept. Object identity is absent.
 Relational motion is present.
 
@@ -151,7 +151,7 @@ which areas of embedding space:
 
 The four lowest-confidence UCF classes cluster together in embedding
 space rather than scattering randomly. They form a coherent region
-with no close SSv2 centroid neighbors — a structurally isolated
+with no close SSv2 centroid neighbors, a structurally isolated
 "whole-body motion without hand-object interaction" region:
 
 | Class | SSv2 Mapping | Structural reason |
@@ -162,7 +162,7 @@ with no close SSv2 centroid neighbors — a structurally isolated
 | WritingOnBoard | "Sprinkling something" | Arm arc misread as dispersal |
 
 ![Blind spot neighborhood analysis]({{ "/assets/images/vjepa2_blind_spot_analysis.png" | relative_url }})
-*Each blind-spot class shown in red with its 20 nearest embedding neighbors in blue. Lines connect each class centroid to its nearest SSv2 concept centroids (stars). All four blind-spot classes cluster together and share nearest neighbors — they form a coherent isolated region, not random noise.*
+*Each blind-spot class shown in red with its 20 nearest embedding neighbors in blue. Lines connect each class centroid to its nearest SSv2 concept centroids (stars). All four blind-spot classes cluster together and share nearest neighbors; they form a coherent isolated region, not random noise.*
 
 The model has no "unknown" output. It forces every input onto the
 nearest SSv2 physics primitive regardless of fit quality.
@@ -203,16 +203,16 @@ higher confidence predictions. But r²≈0.04 means it explains only
 
 The geometry of where a class sits in embedding space, and how
 tightly it clusters, does not reliably predict whether the SSv2
-head will be confident. Something more nuanced — likely the degree
+head will be confident. Something more nuanced, likely the degree
 of overlap between the action's motion vocabulary and SSv2's physics
-primitive vocabulary — is the actual driver, but that is not
+primitive vocabulary, is the actual driver, but that is not
 directly measurable from frozen embeddings alone.
 
 ### The Tight Cluster Paradox
 
 21 LOW_CONF_SCATTERED classes have above-median within-class cosine
-similarity. Their embeddings are geometrically tight — the backbone
-encodes them consistently — yet the SSv2 head produces low-confidence
+similarity. Their embeddings are geometrically tight: the backbone
+encodes them consistently, yet the SSv2 head produces low-confidence
 scattered predictions. These 21 classes are the clearest pre-linear-probe
 evidence that the backbone has encoded structure the SSv2 head lacks
 vocabulary to express.
@@ -251,12 +251,12 @@ The tight cluster paradox resolution:
 | Delta | +68.7% |
 
 There is no UCF-101 class where the backbone fails. The worst
-performer is WalkingWithDog at 90% — the only class where the SSv2
+performer is WalkingWithDog at 90%, the only class where the SSv2
 head was already somewhat confident (0.718), leaving less room to
 improve.
 
 ![Linear probe results]({{ "/assets/images/vjepa2_linear_probe.png" | relative_url }})
-*Top left: per-behavior accuracy with error bars. Top right: scatter of SSv2 confidence (x) vs linear probe accuracy (y) per class — points above the diagonal have more linearly separable embeddings than the SSv2 head's confidence suggests. Bottom: top 15 most and least improved classes by delta.*
+*Top left: per-behavior accuracy with error bars. Top right: scatter of SSv2 confidence (x) vs linear probe accuracy (y) per class; points above the diagonal have more linearly separable embeddings than the SSv2 head's confidence suggests. Bottom: top 15 most and least improved classes by delta.*
 
 ---
 
@@ -264,8 +264,8 @@ improve.
 
 The linear probe result closes the causal question the embedding
 analysis raised. The backbone encodes all 101 UCF-101 action categories
-at 98.2% linear separability. The SSv2 classification head — a
-supervised component with a fixed 174-word vocabulary — cannot express
+at 98.2% linear separability. The SSv2 classification head, a
+supervised component with a fixed 174-word vocabulary, cannot express
 42% of what the backbone knows.
 
 For practitioners adapting V-JEPA 2 to a new action domain: the
@@ -299,18 +299,18 @@ The supervised components built on top of them are the limiting factor.
 
 ## What's Next
 
-1. **Kinetics-400** — does the 98.2% linear probe result hold on a
+1. **Kinetics-400**: does the 98.2% linear probe result hold on a
    larger, more diverse benchmark?
-2. **Head replacement vs LoRA** — does fine-tuning the backbone improve
+2. **Head replacement vs LoRA**: does fine-tuning the backbone improve
    over a pure linear head swap, or is the backbone already at ceiling?
-3. **Optical flow for temporal dynamics** — Hypothesis A was only
+3. **Optical flow for temporal dynamics**: Hypothesis A was only
    partially supported using embedding variance as a proxy. Direct
    measurement of motion periodicity from optical flow would give a
    cleaner test of whether temporal periodicity drives confidence.
-4. **Cross-architecture comparison** — does a CLIP-based video model
+4. **Cross-architecture comparison**: does a CLIP-based video model
    show the same backbone/head dissociation, or is this specific to
    JEPA-style predictive pre-training?
-5. **Few-shot head adaptation** — how few labeled examples per class
+5. **Few-shot head adaptation**: how few labeled examples per class
    does a linear head need to reach 95%+ on a new action domain?
 
 ---
